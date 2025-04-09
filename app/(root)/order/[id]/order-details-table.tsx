@@ -166,7 +166,7 @@ const OrderDetailsTable = ({
                 variant: data.success ? 'default' : 'destructive',
                 description: data.message,
               });
-            } catch (error) {
+            } catch (_) {
               toast({
                 variant: 'destructive',
                 description: 'Failed to send receipt',
