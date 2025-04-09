@@ -21,11 +21,20 @@ const StripePayment = ({
   orderId: string;
   clientSecret: string;
 }) => {
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-  );
-
   const { theme, systemTheme } = useTheme();
+  
+  // Check if Stripe key is valid
+  const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+  if (!stripeKey || stripeKey === "pk_test_placeholder_key") {
+    return (
+      <div className="p-4 border rounded">
+        <p className="text-amber-600">Stripe payment not available</p>
+        <p className="text-sm text-gray-500">Please try another payment method</p>
+      </div>
+    );
+  }
+
+  const stripePromise = loadStripe(stripeKey);
 
   // Stripe Form Component
   const StripeForm = () => {

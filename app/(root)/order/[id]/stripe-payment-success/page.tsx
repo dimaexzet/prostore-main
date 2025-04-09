@@ -4,7 +4,11 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+// Проверка наличия ключа Stripe и создание клиента только если ключ существует
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripe = stripeSecretKey && stripeSecretKey !== "sk_test_placeholder_key" 
+  ? new Stripe(stripeSecretKey) 
+  : null;
 
 const SuccessPage = async (props: {
   params: Promise<{ id: string }>;
@@ -16,6 +20,21 @@ const SuccessPage = async (props: {
   // Fetch order
   const order = await getOrderById(id);
   if (!order) notFound();
+
+  // Если Stripe не настроен, просто отображаем страницу подтверждения
+  if (!stripe) {
+    return (
+      <div className='max-w-4xl w-full mx-auto space-y-8'>
+        <div className='flex flex-col gap-6 items-center'>
+          <h1 className='h1-bold'>Thanks for your purchase</h1>
+          <div>We are processing your order.</div>
+          <Button asChild>
+            <Link href={`/order/${id}`}>View Order</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   // Retrieve payment intent
   const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
