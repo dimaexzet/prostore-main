@@ -166,7 +166,8 @@ const OrderDetailsTable = ({
                 variant: data.success ? 'default' : 'destructive',
                 description: data.message,
               });
-            } catch (_) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (error) {
               toast({
                 variant: 'destructive',
                 description: 'Failed to send receipt',
