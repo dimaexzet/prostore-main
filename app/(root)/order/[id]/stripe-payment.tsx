@@ -25,6 +25,8 @@ const StripePayment = ({
   
   // Check if Stripe key is valid
   const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+  
+  // If Stripe key is invalid, return a warning
   if (!stripeKey || stripeKey === "pk_test_placeholder_key") {
     return (
       <div className="p-4 border rounded">
