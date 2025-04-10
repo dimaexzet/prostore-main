@@ -21,6 +21,10 @@ const links = [
     title: 'Users',
     href: '/admin/users',
   },
+  {
+    title: 'Test',
+    href: '/admin/test',
+  },
 ];
 
 const MainNav = ({
