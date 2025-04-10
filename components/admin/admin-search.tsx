@@ -6,33 +6,37 @@ import { Input } from '../ui/input';
 
 const AdminSearch = () => {
   const pathname = usePathname();
-  const formActionUrl = pathname.includes('/admin/orders')
+  const formActionUrl = pathname?.includes('/admin/orders')
     ? '/admin/orders'
-    : pathname.includes('/admin/users')
+    : pathname?.includes('/admin/users')
       ? '/admin/users'
       : '/admin/products';
 
   const searchParams = useSearchParams();
-  const [queryValue, setQueryValue] = useState(searchParams.get('query') || '');
+  const [searchTerm, setSearchTerm] = useState<string>(
+    searchParams?.get('query') || ''
+  );
 
   useEffect(() => {
-    setQueryValue(searchParams.get('query') || '');
+    setSearchTerm(searchParams?.get('query') || '');
   }, [searchParams]);
 
   return (
-    <form action={formActionUrl} method='GET'>
-      <Input
-        type='search'
-        placeholder='Search...'
-        name='query'
-        value={queryValue}
-        onChange={(e) => setQueryValue(e.target.value)}
-        className='md:w-[100px] lg:w-[300px]'
-      />
-      <button className='sr-only' type='submit'>
-        Search
-      </button>
-    </form>
+    <div className='relative'>
+      <form
+        action={formActionUrl}
+        className='relative flex w-full items-center'
+      >
+        <Input
+          type='search'
+          placeholder='Search...'
+          name='query'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className='md:w-[100px] lg:w-[300px]'
+        />
+      </form>
+    </div>
   );
 };
 
