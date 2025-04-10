@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -13,7 +14,13 @@ export function middleware(request: NextRequest) {
   if (!request.cookies.get('sessionCartId')) {
     const sessionCartId = crypto.randomUUID();
     const response = NextResponse.next();
-    response.cookies.set('sessionCartId', sessionCartId);
+    response.cookies.set('sessionCartId', sessionCartId, {
+      // Ensure cookie is sent in all contexts
+      secure: true,
+      sameSite: 'lax',
+      // Set a long expiration for the cart
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
     return response;
   }
   

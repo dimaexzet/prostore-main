@@ -171,7 +171,11 @@ export const config = {
         });
 
         // Set newly generated sessionCartId in the response cookies
-        response.cookies.set('sessionCartId', sessionCartId);
+        response.cookies.set('sessionCartId', sessionCartId, {
+          secure: true,
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 24 * 30, // 30 days
+        });
 
         return response;
       } else {
