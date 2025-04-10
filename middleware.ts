@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Пропустить маршруты admin и product без проверки сессии корзины
+  if (pathname.startsWith('/admin/') || pathname.startsWith('/product/')) {
+    return NextResponse.next();
+  }
+  
   // Проверить и создать sessionCartId если его нет
   if (!request.cookies.get('sessionCartId')) {
     const sessionCartId = crypto.randomUUID();
