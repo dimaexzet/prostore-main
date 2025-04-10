@@ -87,15 +87,15 @@ export default function TestPage() {
         <div className="space-y-2 mt-4">
           <h3 className="font-medium">3. Тест обычных ссылок:</h3>
           <div className="flex gap-2">
-            <a href="/admin/products" className="text-blue-500 underline">
+            <Link href="/admin/products" className="text-blue-500 underline">
               К списку продуктов
-            </a>
-            <a href="/admin/products/create" className="text-blue-500 underline">
+            </Link>
+            <Link href="/admin/products/create" className="text-blue-500 underline">
               Создать продукт
-            </a>
-            <a href="/admin/orders" className="text-blue-500 underline">
+            </Link>
+            <Link href="/admin/orders" className="text-blue-500 underline">
               К заказам
-            </a>
+            </Link>
           </div>
         </div>
       </div>

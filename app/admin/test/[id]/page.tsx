@@ -2,11 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 export default function TestDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const id = params.id;
 
   return (
