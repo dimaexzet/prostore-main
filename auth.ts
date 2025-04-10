@@ -157,8 +157,22 @@ export const config = {
 
       // Check for session cart cookie
       if (!request.cookies.get('sessionCartId')) {
-        // Generate new session cart id cookie
-        const sessionCartId = crypto.randomUUID();
+        // Generate new session cart id cookie using Web Crypto API
+        const randomValues = new Uint8Array(16);
+        crypto.getRandomValues(randomValues);
+        
+        // Set version (v4)
+        randomValues[6] = (randomValues[6] & 0x0f) | 0x40;
+        randomValues[8] = (randomValues[8] & 0x3f) | 0x80;
+        
+        // Convert to hex string
+        let sessionCartId = '';
+        for (let i = 0; i < 16; i++) {
+          sessionCartId += randomValues[i].toString(16).padStart(2, '0');
+          if (i === 3 || i === 5 || i === 7 || i === 9) {
+            sessionCartId += '-';
+          }
+        }
 
         // Clone the req headers
         const newRequestHeaders = new Headers(request.headers);
