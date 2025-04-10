@@ -3,8 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Пропустить маршруты admin и product без проверки сессии корзины
-  if (pathname.startsWith('/admin/') || pathname.startsWith('/product/')) {
+  // Исключаем маршруты админки и страниц товаров из обработки middleware
+  // Используем более широкий паттерн, чтобы захватить также подмаршруты с ID
+  if (pathname.startsWith('/admin') || pathname.startsWith('/product')) {
     return NextResponse.next();
   }
   
@@ -19,17 +20,19 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Настройка маршрутов для middleware
+// Настройка маршрутов для middleware - исключаем admin и product из matcher
 export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
+     * - admin (admin routes)
+     * - product (product pages)
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - images/ (images directory)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|images).*)'
+    '/((?!admin|product|api|_next/static|_next/image|favicon.ico|images).*)'
   ]
 };
