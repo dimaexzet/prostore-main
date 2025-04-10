@@ -127,7 +127,11 @@ export const config = {
         /\/profile/,
         /\/user\/(.*)/,
         /\/order\/(.*)/,
-        /\/admin/,
+        /^\/admin\/?$/, // Только корневой путь /admin/ и /admin
+        /^\/admin\/overview\/?$/, // Только определенные разделы админки без параметров
+        /^\/admin\/products\/?$/,
+        /^\/admin\/orders\/?$/,
+        /^\/admin\/users\/?$/,
       ];
 
       // Get pathname from the req URL object
@@ -135,6 +139,21 @@ export const config = {
 
       // Check if user is not authenticated and accessing a protected path
       if (!auth && protectedPaths.some((p) => p.test(pathname))) return false;
+
+      // Проверяем, является ли путь admin с динамическими параметрами и защищаем их
+      // Но делаем это только после проверки аутентификации, чтобы не блокировать навигацию
+      if (pathname.startsWith('/admin/') && !pathname.startsWith('/admin/test/')) {
+        // Если пользователь авторизован и имеет роль admin, пропускаем
+        if (auth?.user?.role === 'admin') {
+          return true;
+        }
+        
+        // Если пользователь авторизован, но не admin, или не авторизован вообще,
+        // и пытается получить доступ к admin маршрутам - блокируем
+        if (!auth || auth?.user?.role !== 'admin') {
+          return false;
+        }
+      }
 
       // Check for session cart cookie
       if (!request.cookies.get('sessionCartId')) {
